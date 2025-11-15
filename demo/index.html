@@ -2,193 +2,111 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>UBP Demo – Universal Blockchain Protocol</title>
-
+<title>UBP Demo</title>
 <style>
     body {
         margin: 0;
-        padding: 0;
-        font-family: Inter, Arial, sans-serif;
-        background: linear-gradient(135deg, #0a0f1f, #1a2337, #0d1117);
+        font-family: Arial, sans-serif;
+        display: flex;
+        height: 100vh;
+        background: #0d0d0d;
         color: #fff;
-        min-height: 100vh;
     }
-
-    .container {
-        max-width: 800px;
-        margin: 40px auto;
+    .sidebar {
+        width: 260px;
+        background: #111;
+        border-right: 1px solid #333;
         padding: 20px;
-        text-align: center;
-    }
-
-    .card {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        padding: 25px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(10px);
-        margin-top: 20px;
-    }
-
-    textarea {
-        width: 100%;
-        height: 100px;
-        padding: 12px;
-        border-radius: 10px;
-        border: none;
-        outline: none;
-        background: rgba(255,255,255,0.08);
-        color: #fff;
-        resize: vertical;
-        font-size: 14px;
-    }
-
-    .btn {
-        margin-top: 15px;
-        padding: 12px 22px;
-        background: #4c8bff;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 16px;
-        color: #fff;
-        transition: 0.25s;
-    }
-
-    .btn:hover {
-        background: #6aa0ff;
-        transform: scale(1.03);
-    }
-
-    select {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        background: rgba(255,255,255,0.08);
-        border-radius: 10px;
-        border: none;
-        color: #fff;
-        font-size: 14px;
-        outline: none;
-    }
-
-    pre {
-        background: rgba(0,0,0,0.45);
-        padding: 15px;
-        border-radius: 10px;
-        max-height: 300px;
+        box-sizing: border-box;
         overflow-y: auto;
-        text-align: left;
-        color: #7df28a;
-        font-size: 14px;
     }
-
-    .logo {
-        font-size: 36px;
-        font-weight: bold;
-        letter-spacing: 2px;
+    .sidebar h2 {
+        margin-top: 0;
+        font-size: 18px;
+    }
+    .sample {
+        padding: 10px;
         margin-bottom: 10px;
+        background: #222;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.2s;
     }
-
+    .sample:hover {
+        background: #333;
+    }
+    .main {
+        flex: 1;
+        padding: 20px;
+    }
+    #output {
+        background: #111;
+        padding: 15px;
+        border-radius: 6px;
+        min-height: 300px;
+        white-space: pre-wrap;
+        border: 1px solid #333;
+    }
 </style>
 </head>
-
 <body>
-<div class="container">
 
-    <div class="logo">UBP</div>
-    <h2>Universal Blockchain Protocol Demo</h2>
-    <p style="opacity:0.8">
-        Paste a UBP link or choose a sample.<br>
-        The validator will detect chain, type, and value.
-    </p>
+<div class="sidebar">
+    <h2>UBP Samples</h2>
 
-    <div class="card">
-
-        <!-- SAMPLE SELECTOR -->
-        <label style="float:left;">Load Sample:</label>
-        <select id="sampleSelect">
-            <option value="">Select sample…</option>
-            <option value="sample1">BTC Transaction</option>
-            <option value="sample2">ETH Address</option>
-            <option value="sample3">SOL Token</option>
-        </select>
-
-        <!-- INPUT TEXTAREA -->
-        <textarea id="inputData" placeholder="Example: ubp:sol/address/9xKram123"></textarea>
-
-        <!-- PARSE BUTTON -->
-        <button class="btn" onclick="parseUBP()">Validate UBP</button>
-
-        <!-- OUTPUT -->
-        <h3 style="margin-top:30px;">Parsed Result</h3>
-        <pre id="outputBox">Waiting for input…</pre>
-
+    <div class="sample" onclick="loadSample('solana')">
+        Solana — Sample Contract
     </div>
+
+    <div class="sample" onclick="loadSample('ethereum')">
+        Ethereum — Sample Contract
+    </div>
+
+    <div class="sample" onclick="loadSample('btc')">
+        Bitcoin — Wallet Example
+    </div>
+
+    <div class="sample" onclick="loadSample('usdc')">
+        Cross-Chain USDC Resolver
+    </div>
+
+</div>
+
+<div class="main">
+    <h2>Sample Preview</h2>
+    <div id="output">Select a sample from the left sidebar.</div>
 </div>
 
 <script>
-<script>
-// Load sample UBP links
-document.getElementById("sampleSelect").addEventListener("change", function() {
-    fetch("examples/sample-ubp-links.txt", { cache: "no-store" })
-        .then(r => r.text())
-        .then(t => {
-            const lines = t.trim().split("\n");
+const samples = {
+    solana: `{
+  "chain": "Solana",
+  "address": "So11111111111111111111111111111111111111112",
+  "type": "program",
+  "description": "Wrapped SOL token program on Solana."
+}`,
+    ethereum: `{
+  "chain": "Ethereum",
+  "address": "0xC02aaA39b223FE8D0A0E5C4F27eAD9083C756Cc2",
+  "type": "contract",
+  "description": "WETH contract on Ethereum."
+}`,
+    btc: `{
+  "chain": "Bitcoin",
+  "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  "type": "wallet",
+  "description": "Sample BTC wallet address."
+}`,
+    usdc: `{
+  "chain": "Multi-chain",
+  "address": "USDC",
+  "type": "resolver",
+  "description": "Returns USDC contract based on detected chain."
+}`
+};
 
-            if (this.value === "sample1") document.getElementById("inputData").value = lines[0];
-            if (this.value === "sample2") document.getElementById("inputData").value = lines[1];
-            if (this.value === "sample3") document.getElementById("inputData").value = lines[2];
-        })
-        .catch(err => {
-            document.getElementById("inputData").value = "Error loading samples.";
-        });
-});
-</script>
-
-
-// REAL UBP PARSER
-function parseUBP() {
-    const raw = document.getElementById("inputData").value.trim();
-    const output = document.getElementById("outputBox");
-
-    if (!raw) {
-        output.innerText = "❌ No input provided.";
-        return;
-    }
-
-    // Check prefix
-    if (!raw.startsWith("ubp:")) {
-        output.innerText = JSON.stringify({ error: "Invalid UBP format. Must start with 'ubp:'" }, null, 4);
-        return;
-    }
-
-    // Remove prefix
-    const body = raw.replace("ubp:", "");
-
-    // Split into parts
-    const parts = body.split("/");
-
-    if (parts.length < 3) {
-        output.innerText = JSON.stringify({ error: "Invalid UBP structure. Format: ubp:chain/type/value" }, null, 4);
-        return;
-    }
-
-    const [chain, type, ...valueParts] = parts;
-    const value = valueParts.join("/");
-
-    // Build parsed output
-    const parsed = {
-        valid: true,
-        chain: chain,
-        type: type,
-        value: value,
-        raw_length: raw.length,
-        timestamp: new Date().toISOString()
-    };
-
-    output.innerText = JSON.stringify(parsed, null, 4);
+function loadSample(type) {
+    document.getElementById("output").textContent = samples[type];
 }
 </script>
 
