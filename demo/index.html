@@ -129,6 +129,7 @@
 </div>
 
 <script>
+<script>
 // Load sample UBP links
 document.getElementById("sampleSelect").addEventListener("change", function() {
     fetch("examples/sample-ubp-links.txt", { cache: "no-store" })
@@ -139,8 +140,12 @@ document.getElementById("sampleSelect").addEventListener("change", function() {
             if (this.value === "sample1") document.getElementById("inputData").value = lines[0];
             if (this.value === "sample2") document.getElementById("inputData").value = lines[1];
             if (this.value === "sample3") document.getElementById("inputData").value = lines[2];
+        })
+        .catch(err => {
+            document.getElementById("inputData").value = "Error loading samples.";
         });
 });
+</script>
 
 
 // REAL UBP PARSER
