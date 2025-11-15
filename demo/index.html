@@ -1,26 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>UBP Demo</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    code { background: #f4f4f4; padding: 3px 6px; border-radius: 5px; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UBP Parser Demo</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(145deg, #1e1e2f, #2c2c44);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 30px;
+        width: 90%;
+        max-width: 500px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+    }
+
+    .output-box {
+        margin-top: 20px;
+        background: rgba(0,0,0,0.25);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: left;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .valid { color: #7CFF7C; }
+    .invalid { color: #FF7070; }
+
+</style>
 </head>
+
 <body>
 
-<h1>UBP Demo</h1>
+<div class="container">
+    <h1>🔍 UBP Parser</h1>
 
-<p>This page demonstrates how UBP links look.</p>
+    <input id="ubpInput" placeholder="Paste UBP link e.g. ubp:btc/tx/123abc..." />
 
-<h3>Example Links</h3>
-<ul>
-  <li><code>ubp:btc/tx/111aaa</code></li>
-  <li><code>ubp:eth/address/0xABCDEF123</code></li>
-  <li><code>ubp:sol/token/So111111111111111111</code></li>
-</ul>
+    <div id="output" class="output-box">
+        Enter a UBP link above to parse it.
+    </div>
+</div>
 
-<p>More details in <strong>spec/ubp-spec-v1.md</strong></p>
+<script>
+function parseUBP(ubp) {
+    const pattern = /^ubp:([a-z0-9]+)\/([a-z0-9]+)\/(.+)$/i;
+    const match = ubp.match(pattern);
+
+    if (!match) {
+        return { valid: false };
+    }
+
+    return {
+        valid: true,
+        chain: match[1],
+        type: match[2],
+        value: match[3]
+    };
+}
+
+const input = document.getElementById("ubpInput");
+const output = document.getElementById("output");
+
+input.addEventListener("input", () => {
+    const text = input.value.trim();
+
+    if (text === "") {
+        output.innerHTML = "Enter a UBP link above to parse it.";
+        return;
+    }
+
+    const result = parseUBP(text);
+
+    if (!result.valid) {
+        output.innerHTML = `<span class="invalid">❌ Invalid UBP link format.</span>`;
+    } else {
+        output.innerHTML = `
+            <span class="valid">✔ Valid UBP Link</span><br><br>
+            <b>Chain:</b> ${result.chain}<br>
+            <b>Type:</b> ${result.type}<br>
+            <b>Value:</b> ${result.value}
+        `;
+    }
+});
+</script>
 
 </body>
 </html>
