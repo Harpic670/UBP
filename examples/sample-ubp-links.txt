@@ -1,0 +1,32 @@
+# Sample UBP Links
+
+# Bitcoin
+ubp:btc/address/1KFHE7w8BhaENAswwryaoccDb6qcT6DbYY
+ubp:btc/tx/4d3c1b402ab5c77dd50a09b01c10c8a1ec2de
+
+# Ethereum
+ubp:eth/address/0x742d35Cc6634C0532925a3b844Bc454e4438f44e
+ubp:eth/tx/0x5e0b78ebf3a07dc8c35668871ee
+ubp:eth/contract/0xdAC17F958D2ee523a2206206994597C13D831ec7  # USDT Contract
+
+# Solana
+ubp:sol/address/9xKram111111111111111111111111111
+ubp:sol/tx/5swVQYi5y9h3Q1rZKLwd3zGzFv2jQ7oqM3KaPN
+ubp:sol/token/So11111111111111111111111111111111111111112
+ubp:sol/nft/BaCw1234xyzMintAddress
+
+# BNB Chain
+ubp:bnb/address/0x123abcFF33bb77F441d11f
+ubp:bnb/tx/0x9911aabbccddeeff001122334455
+
+# Polygon
+ubp:matic/address/0x99887766554433221100
+ubp:matic/tx/0xabcabcabc111222333444
+
+# Avalanche
+ubp:avax/address/0x11aa33bb44cc55dd66ee
+ubp:avax/tx/0xffaabbccddeeff00998877
+
+# Notes
+- These examples use real format but sometimes shortened hashes for simplicity.
+- Purpose: help devs understand UBP quickly.
