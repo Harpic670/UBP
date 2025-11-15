@@ -3,156 +3,153 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>UBP Parser Demo</title>
+<title>UBP Demo – Universal Byte Parser</title>
 
 <style>
     body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(145deg, #1e1e2f, #2c2c44);
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        padding: 0;
+        font-family: Inter, Arial, sans-serif;
+        background: linear-gradient(135deg, #0a0f1f, #1a2337, #0d1117);
         color: #fff;
+        height: 100vh;
     }
 
     .container {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        padding: 30px;
-        width: 90%;
-        max-width: 580px;
-        border-radius: 15px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
         text-align: center;
     }
 
-    h1 {
-        font-size: 28px;
-        margin-bottom: 20px;
+    .card {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        margin-top: 20px;
     }
 
-    input {
+    textarea {
         width: 100%;
-        padding: 14px;
-        font-size: 16px;
+        height: 100px;
+        padding: 12px;
         border-radius: 10px;
         border: none;
         outline: none;
+        background: rgba(255,255,255,0.08);
+        color: #fff;
+        resize: vertical;
+        font-size: 14px;
     }
 
-    .output-box {
-        margin-top: 20px;
-        background: rgba(0,0,0,0.25);
+    .btn {
+        margin-top: 15px;
+        padding: 12px 22px;
+        background: #4c8bff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #fff;
+        transition: 0.25s;
+    }
+
+    .btn:hover {
+        background: #6aa0ff;
+        transform: scale(1.03);
+    }
+
+    select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 10px;
+        border: none;
+        color: #fff;
+        font-size: 14px;
+        outline: none;
+    }
+
+    pre {
+        background: rgba(0,0,0,0.45);
         padding: 15px;
         border-radius: 10px;
-        text-align: left;
-        font-size: 15px;
-        line-height: 1.6;
-        min-height: 80px;
-    }
-
-    .valid { color: #7CFF7C; }
-    .invalid { color: #FF7070; }
-
-    .samples-box {
-        margin-top: 25px;
-        background: rgba(255,255,255,0.08);
-        padding: 12px;
-        border-radius: 10px;
-        font-size: 14px;
-        text-align: left;
-        max-height: 160px;
+        max-height: 300px;
         overflow-y: auto;
-        white-space: pre-wrap;
-        cursor: pointer;
-    }
-
-    .samples-title {
-        font-size: 16px;
-        margin-bottom: 8px;
         text-align: left;
-        opacity: 0.9;
+        color: #7df28a;
+        font-size: 14px;
     }
 </style>
 </head>
 
 <body>
-
 <div class="container">
-    <h1>🔍 UBP Parser</h1>
 
-    <input id="ubpInput" placeholder="Paste UBP link e.g. ubp:btc/tx/123abc..." />
+    <h1>UBP Demo – Universal Byte Parser</h1>
+    <p style="opacity:0.8">
+        Instantly decode cross-chain byte structures.<br>
+        Paste any raw input / account data and UBP will parse it.
+    </p>
 
-    <div id="output" class="output-box">
-        Enter a UBP link above to parse it.
-    </div>
+    <div class="card">
 
-    <div class="samples-title">📄 Sample UBP Links:</div>
-    <div id="samples" class="samples-box">
-        Loading sample links...
+        <!-- SAMPLE SELECTOR -->
+        <label style="float:left;">Load Sample:</label>
+        <select id="sampleSelect">
+            <option value="">Select sample…</option>
+            <option value="sample1">Sample: Solana TX Data</option>
+            <option value="sample2">Sample: Ethereum Input Data</option>
+            <option value="sample3">Sample: SPL Token Account</option>
+        </select>
+
+        <!-- INPUT TEXTAREA -->
+        <textarea id="inputData" placeholder="Paste raw byte/hex/base58 data here..."></textarea>
+
+        <!-- PARSE BUTTON -->
+        <button class="btn" onclick="parseData()">Parse</button>
+
+        <!-- OUTPUT -->
+        <h3 style="margin-top:30px;">Parsed Result</h3>
+        <pre id="outputBox">Waiting for input…</pre>
+
     </div>
 </div>
 
 <script>
-function parseUBP(ubp) {
-    const pattern = /^ubp:([a-z0-9]+)\/([a-z0-9]+)\/(.+)$/i;
-    const match = ubp.match(pattern);
+// Load demo samples
+document.getElementById("sampleSelect").addEventListener("change", function() {
+    fetch("./examples/sample-ubp-links.txt")
+        .then(r => r.text())
+        .then(t => {
+            const lines = t.trim().split("\n");
 
-    if (!match) {
-        return { valid: false };
-    }
+            if (this.value === "sample1") document.getElementById("inputData").value = lines[0];
+            if (this.value === "sample2") document.getElementById("inputData").value = lines[1];
+            if (this.value === "sample3") document.getElementById("inputData").value = lines[2];
+        });
+});
 
-    return {
-        valid: true,
-        chain: match[1],
-        type: match[2],
-        value: match[3]
-    };
-}
-
-const input = document.getElementById("ubpInput");
-const output = document.getElementById("output");
-const samplesBox = document.getElementById("samples");
-
-input.addEventListener("input", () => {
-    const text = input.value.trim();
-
-    if (text === "") {
-        output.innerHTML = "Enter a UBP link above to parse it.";
+// Fake Parser (replace later with real resolver)
+function parseData() {
+    const raw = document.getElementById("inputData").value.trim();
+    if (!raw) {
+        document.getElementById("outputBox").innerText = "No data provided.";
         return;
     }
 
-    const result = parseUBP(text);
+    // Demo output – shows structure beautifully
+    const parsed = {
+        input_length: raw.length,
+        detected_format: raw.startsWith("0x") ? "hex" : "base58?",
+        sample_insight: "This is only a frontend demo. Replace parser() with real UBP resolver."
+    };
 
-    if (!result.valid) {
-        output.innerHTML = `<span class="invalid">❌ Invalid UBP link format.</span>`;
-    } else {
-        output.innerHTML = `
-            <span class="valid">✔ Valid UBP Link</span><br><br>
-            <b>Chain:</b> ${result.chain}<br>
-            <b>Type:</b> ${result.type}<br>
-            <b>Value:</b> ${result.value}
-        `;
-    }
-});
-
-// Load sample links from GitHub
-fetch("../examples/sample-ubp-links.txt")
-    .then(response => response.text())
-    .then(text => {
-        samplesBox.textContent = text;
-    });
-
-// Click-to-copy samples
-samplesBox.addEventListener("click", (event) => {
-    if (event.target) {
-        const line = window.getSelection().toString() || event.target.innerText;
-        navigator.clipboard.writeText(line.trim());
-        alert("Copied:\n" + line.trim());
-    }
-});
+    document.getElementById("outputBox").innerText = JSON.stringify(parsed, null, 4);
+}
 </script>
 
 </body>
