@@ -22,7 +22,7 @@
         backdrop-filter: blur(10px);
         padding: 30px;
         width: 90%;
-        max-width: 500px;
+        max-width: 580px;
         border-radius: 15px;
         box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         text-align: center;
@@ -50,11 +50,31 @@
         text-align: left;
         font-size: 15px;
         line-height: 1.6;
+        min-height: 80px;
     }
 
     .valid { color: #7CFF7C; }
     .invalid { color: #FF7070; }
 
+    .samples-box {
+        margin-top: 25px;
+        background: rgba(255,255,255,0.08);
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        text-align: left;
+        max-height: 160px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        cursor: pointer;
+    }
+
+    .samples-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+        text-align: left;
+        opacity: 0.9;
+    }
 </style>
 </head>
 
@@ -67,6 +87,11 @@
 
     <div id="output" class="output-box">
         Enter a UBP link above to parse it.
+    </div>
+
+    <div class="samples-title">📄 Sample UBP Links:</div>
+    <div id="samples" class="samples-box">
+        Loading sample links...
     </div>
 </div>
 
@@ -89,6 +114,7 @@ function parseUBP(ubp) {
 
 const input = document.getElementById("ubpInput");
 const output = document.getElementById("output");
+const samplesBox = document.getElementById("samples");
 
 input.addEventListener("input", () => {
     const text = input.value.trim();
@@ -109,6 +135,22 @@ input.addEventListener("input", () => {
             <b>Type:</b> ${result.type}<br>
             <b>Value:</b> ${result.value}
         `;
+    }
+});
+
+// Load sample links from GitHub
+fetch("../examples/sample-ubp-links.txt")
+    .then(response => response.text())
+    .then(text => {
+        samplesBox.textContent = text;
+    });
+
+// Click-to-copy samples
+samplesBox.addEventListener("click", (event) => {
+    if (event.target) {
+        const line = window.getSelection().toString() || event.target.innerText;
+        navigator.clipboard.writeText(line.trim());
+        alert("Copied:\n" + line.trim());
     }
 });
 </script>
