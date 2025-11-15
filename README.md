@@ -1,26 +1,22 @@
-﻿# UBP — Universal Blockchain Protocol
-Created by: Kram  
-Version: 1.0  
-License: MIT
+# UBP — Universal Blockchain Protocol  
+**Created by:** Kram  
+**Version:** 1.0  
+**LICENSE:** MIT
 
 ---
 
-## 🔗 What is UBP?
+## 🌐 Overview
 
-UBP (Universal Blockchain Protocol) is a simple, readable, chain-agnostic link format for referencing blockchain transactions, wallet addresses, tokens, and blocks.
+**UBP (Universal Blockchain Protocol)** is a simple, human-readable, chain-agnostic link format designed to unify blockchain navigation across all chains.
 
-UBP is designed to become the **“URL format” for blockchains**, similar to how `https://` unified the web.
+UBP aims to become the **universal standard** for referencing:
 
----
+- Transactions  
+- Wallet addresses  
+- Token mints  
+- Blocks  
+- NFT assets  
+- Contract functions (future)  
 
-## 🚀 Why UBP Exists
-
-Every blockchain uses different explorers and link structures.  
-Chaotic. Confusing. Fragmented.
-
-UBP fixes this by creating **one universal format** that works across all chains.
-
----
-
-## 📘 UBP Format
+Instead of using long, inconsistent URLs from different explorers, UBP creates one clean, universal link format:
 
