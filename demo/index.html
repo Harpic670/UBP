@@ -13,46 +13,13 @@
         background: linear-gradient(135deg, #0a0f1f, #1a2337, #0d1117);
         color: #fff;
         height: 100vh;
-        display: flex;
     }
 
-    /* SIDEBAR */
-    .sidebar {
-        width: 260px;
-        background: rgba(255, 255, 255, 0.06);
-        border-right: 1px solid rgba(255,255,255,0.1);
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
         padding: 20px;
-        box-sizing: border-box;
-        backdrop-filter: blur(10px);
-    }
-
-    .sidebar h2 {
-        margin-top: 0;
-        font-size: 20px;
-        opacity: 0.9;
         text-align: center;
-    }
-
-    .sample-item {
-        padding: 12px;
-        margin-top: 10px;
-        background: rgba(255,255,255,0.08);
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-        font-size: 14px;
-    }
-
-    .sample-item:hover {
-        background: rgba(255,255,255,0.15);
-    }
-
-    /* MAIN PANEL */
-    .main {
-        flex: 1;
-        padding: 40px;
-        max-width: 900px;
-        margin: auto;
     }
 
     .card {
@@ -94,6 +61,18 @@
         transform: scale(1.03);
     }
 
+    select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 10px;
+        border: none;
+        color: #fff;
+        font-size: 14px;
+        outline: none;
+    }
+
     pre {
         background: rgba(0,0,0,0.45);
         padding: 15px;
@@ -108,17 +87,8 @@
 </head>
 
 <body>
+<div class="container">
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-    <h2>Samples</h2>
-    <div class="sample-item" onclick="loadSample(1)">Solana TX Data</div>
-    <div class="sample-item" onclick="loadSample(2)">Ethereum Input Data</div>
-    <div class="sample-item" onclick="loadSample(3)">SPL Token Account</div>
-</div>
-
-<!-- MAIN CONTENT -->
-<div class="main">
     <h1>UBP Demo – Universal Byte Parser</h1>
     <p style="opacity:0.8">
         Instantly decode cross-chain byte structures.<br>
@@ -126,25 +96,42 @@
     </p>
 
     <div class="card">
+
+        <!-- SAMPLE SELECTOR -->
+        <label style="float:left;">Load Sample:</label>
+        <select id="sampleSelect">
+            <option value="">Select sample…</option>
+            <option value="sample1">Sample: Solana TX Data</option>
+            <option value="sample2">Sample: Ethereum Input Data</option>
+            <option value="sample3">Sample: SPL Token Account</option>
+        </select>
+
+        <!-- INPUT TEXTAREA -->
         <textarea id="inputData" placeholder="Paste raw byte/hex/base58 data here..."></textarea>
 
+        <!-- PARSE BUTTON -->
         <button class="btn" onclick="parseData()">Parse</button>
 
+        <!-- OUTPUT -->
         <h3 style="margin-top:30px;">Parsed Result</h3>
         <pre id="outputBox">Waiting for input…</pre>
+
     </div>
 </div>
 
 <script>
-// Load sample data
-function loadSample(id) {
+// Load demo samples
+document.getElementById("sampleSelect").addEventListener("change", function() {
     fetch("./examples/sample-ubp-links.txt")
         .then(r => r.text())
         .then(t => {
             const lines = t.trim().split("\n");
-            document.getElementById("inputData").value = lines[id - 1] || "";
+
+            if (this.value === "sample1") document.getElementById("inputData").value = lines[0];
+            if (this.value === "sample2") document.getElementById("inputData").value = lines[1];
+            if (this.value === "sample3") document.getElementById("inputData").value = lines[2];
         });
-}
+});
 
 // Fake Parser (replace later with real resolver)
 function parseData() {
@@ -154,10 +141,11 @@ function parseData() {
         return;
     }
 
+    // Demo output – shows structure beautifully
     const parsed = {
         input_length: raw.length,
         detected_format: raw.startsWith("0x") ? "hex" : "base58?",
-        info: "This is only a UI demo. Real UBP resolver will replace this."
+        sample_insight: "This is only a frontend demo. Replace parser() with real UBP resolver."
     };
 
     document.getElementById("outputBox").innerText = JSON.stringify(parsed, null, 4);
@@ -165,4 +153,4 @@ function parseData() {
 </script>
 
 </body>
-</html>
+</html> do one thing shift the examples sceen to the side bar i think it will sufficent 
