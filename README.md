@@ -20,3 +20,6 @@ UBP aims to become the **universal standard** for referencing:
 
 Instead of using long, inconsistent URLs from different explorers, UBP creates one clean, universal link format:
 
+
+## Additional Docs
+- [Resolver Documentation](resolver/README.md)
