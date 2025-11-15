@@ -131,7 +131,7 @@
 <script>
 // Load sample UBP links
 document.getElementById("sampleSelect").addEventListener("change", function() {
-    fetch("./examples/sample-ubp-links.txt")
+    fetch("examples/sample-ubp-links.txt", { cache: "no-store" })
         .then(r => r.text())
         .then(t => {
             const lines = t.trim().split("\n");
